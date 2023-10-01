@@ -9,8 +9,18 @@ $('#datepicker input').datepicker({
     startDate: "Date()"
 })
 
+//Citas que ya fueron registradas
+const calendario = [{
+    "nombre": "Modesto Arreola",
+    "anio": 2023,
+    "mes": 10,
+    "dia": 20,
+    "hora": 10,
+    "fecha": "2023-01-01T16:00:00.000Z"
+}]
+
 const citasAgregadas = document.getElementById("citaAgregada");
-const arriba = document.getElementById("arriba");
+const alerta = document.getElementById("alerta");
 if (localStorage.getItem("cita")){
     const cita = JSON.parse(localStorage.getItem("cita"));
     agregarCitaAlDom(cita);
@@ -64,7 +74,8 @@ formaCita.addEventListener("submit", (e) => {
 
 function borrarCita(){
     localStorage.removeItem('cita');
-    citasAgregadas.remove();
+    citasAgregadas.innerHTML = ""
+    calendario.pop();
 }
 
 function guardarCita(cita){
@@ -72,7 +83,7 @@ function guardarCita(cita){
 }
 
 function agregarCitaAlDom(cita){
-    citasAgregadas.innerHTML = `<div class="card text-center">
+    citasAgregadas.innerHTML = `<div class="card text-center" id="card">
     <div class="card-header">
       Cita
     </div>
@@ -84,7 +95,7 @@ function agregarCitaAlDom(cita){
     <div class="card-footer text-body-secondary">
       Recuerda llegar 5 minutos antes a tu cita.
     </div>
-  </div>`
+  </div>`;
 }
 
 function alertaDuplicado(){
@@ -99,6 +110,8 @@ function alertaYaTiene(){
     Ya tienes una cita, puede borrarla y agregar otra si gustas.
 </div>`
 }
+
+
 
 /* const config = {
     name: "Cita para plan nutricional",
