@@ -10,9 +10,9 @@ $('#datepicker input').datepicker({
 
 
 let citasAgregadas = document.getElementById("citaAgregada");
-if (!localStorage.getItem("cita")){
-    cita = JSON.parse(localStorage.getItem("cita"));
-    agregarCitaAlDom();
+if (localStorage.getItem("cita")){
+    const cita = JSON.parse(localStorage.getItem("cita"));
+    agregarCitaAlDom(cita);
 }
 
 class Cita {
