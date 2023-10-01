@@ -13,18 +13,20 @@
         <div class="mx-auto col-10 col-md-8 col-lg-6">
             <h1 class="text-center">Creo una cita con nuestro entrenador</h1>
             <h1 class="text-center mb-5">Master Gym Victoria</h1>
-            <form>
+            <form id="formaCita" class="needs-validation" novalidate>
                 <div class="date form-floating mb-4" >
-                    <input type="text" id="nombre" class="form-control"  placeholder="Escribe tu Nombre">
+                    <input type="text" id="nombre" class="form-control"  placeholder="Escribe tu Nombre" required>
                     <label for="nombre">Escribe tu Nombre</label>
+                    <div class="invalid-feedback">Ingresa un nombre valido</div>
                 </div>
                 <div class="date form-floating mb-4" id="datepicker">
-                    <input type="text" class="form-control" id="fecha" placeholder="Elige la fecha">
+                    <input type="text" class="form-control" id="fecha" placeholder="Elige la fecha" required>
                     <label for="fecha">Selecciona fecha</label>
+                    <div class="invalid-feedback">Ingresa una fecha valida</div>
                 </div>
                 <div class="form-floating mb-4">
-                    <select class="form-select" id="floatingSelectGrid">
-                      <option selected>Selecciona la hora</option>
+                    <select class="form-select" id="floatingSelectGrid" required>
+                      <option selected disabled value="">Selecciona la hora</option>
                       <option value="10">10:00 A.M.</option>
                       <option value="11">11:00 A.M.</option>
                       <option value="12">12:00 P.M.</option>
@@ -35,11 +37,18 @@
                       <option value="17">5:00 P.M.</option>
                     </select>
                     <label for="floatingSelectGrid">Selecciona la hora</label>
+                    <div class="invalid-feedback">Ingresa una hora valida</div>
                 </div>
                 <div class="d-grid">
                   <button type="submit" class="btn btn-primary btn-block mb-4">Hacer Cita</button>
                 </div>
             </form>
+        <div>
+            <h2 class="text-center">Citas que tienes</h2>
+            <div id="citaAgregada">
+
+            </div>
+        </div>
         </div>
     </div>
     
