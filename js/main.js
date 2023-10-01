@@ -9,7 +9,8 @@ $('#datepicker input').datepicker({
     startDate: "Date()"
 })
 
-let citasAgregadas = document.getElementById("citaAgregada");
+const citasAgregadas = document.getElementById("citaAgregada");
+const arriba = document.getElementById("arriba");
 if (localStorage.getItem("cita")){
     const cita = JSON.parse(localStorage.getItem("cita"));
     agregarCitaAlDom(cita);
@@ -18,10 +19,10 @@ if (localStorage.getItem("cita")){
 class Cita {
     constructor(nombre, anio, mes, dia, hora) {
         this.nombre = nombre;
-        this.anio = anio;
-        this.mes = mes;
-        this.dia = dia;
-        this.hora = hora;
+        this.anio = Number(anio);
+        this.mes = Number(mes);
+        this.dia = Number(dia);
+        this.hora = Number(hora);
         this.fecha= new Date(this.anio, (this.mes - 1), this.dia, this.hora).toJSON(); //se agrega Date() por si se ocupa después
         this.fechaCreacion = Date();
     }
@@ -36,26 +37,30 @@ let formaCita = document.getElementById("formaCita");
 formaCita.addEventListener("submit", (e) => {
     if (!formaCita.checkValidity()) {
         e.preventDefault()
-        e.stopPropagation()
+        e.stopImmediatePropagation()
     
     }else{
-    let nombre = document.getElementById("nombre").value;
-    let fechaCompleta = document.getElementById("fecha").value.split("/");
-    let anio = fechaCompleta[2];
-    let mes = fechaCompleta[1];
-    let dia = fechaCompleta[0]; 
-    let hora = document.getElementById("floatingSelectGrid").value;
-    const cita = new Cita(nombre, anio, mes, dia, hora);
-
-    if (!validateCalendar(calendario, cita)){
-        guardarCita(cita);
-        calendario.push(cita);
-        agregarCitaAlDom(cita);
-    }
+        let nombre = document.getElementById("nombre").value;
+        let fechaCompleta = document.getElementById("fecha").value.split("/");
+        let anio = fechaCompleta[2];
+        let mes = fechaCompleta[1];
+        let dia = fechaCompleta[0]; 
+        let hora = document.getElementById("floatingSelectGrid").value;
+        const cita = new Cita(nombre, anio, mes, dia, hora);
+        if (!validateCalendar(calendario, cita)){
+            guardarCita(cita);
+            calendario.push(cita);
+            agregarCitaAlDom(cita);
+        } else if(localStorage.getItem("cita")){
+            alertaYaTiene();
+        }else {
+            alertaDuplicado();
+        }
     }
     
+    e.preventDefault()
     formaCita.classList.add('was-validated')
-})
+}, false)
 
 function borrarCita(){
     localStorage.removeItem('cita');
@@ -82,15 +87,18 @@ function agregarCitaAlDom(cita){
   </div>`
 }
 
-//Citas que ya fueron registradas
-const calendario = [{
-    "nombre": "Modesto Arreola",
-    "anio": 2023,
-    "mes": 10,
-    "dia": 20,
-    "hora": 10,
-    "fecha": "2023-01-01T16:00:00.000Z"
-}]
+function alertaDuplicado(){
+    alerta.innerHTML = `<div class="alert alert-danger text-center alert-dismissible" role="alert">
+        Esta cita ya esta registrada.
+    </div>`
+
+}
+
+function alertaYaTiene(){
+    alerta.innerHTML = `<div class="alert alert-danger text-center alert-dismissible" role="alert" >
+    Ya tienes una cita, puede borrarla y agregar otra si gustas.
+</div>`
+}
 
 /* const config = {
     name: "Cita para plan nutricional",
