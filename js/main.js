@@ -5,9 +5,9 @@ $('#datepicker input').datepicker({
     daysOfWeekDisabled: "0,6",
     daysOfWeekHighlighted: "1,2,3,4,5",
     autoclose: true,
-    todayHighlight: true
+    todayHighlight: true,
+    startDate: "Date()"
 })
-
 
 let citasAgregadas = document.getElementById("citaAgregada");
 if (localStorage.getItem("cita")){
@@ -39,8 +39,7 @@ formaCita.addEventListener("submit", (e) => {
         e.stopPropagation()
     
     }else{
-        let nombre = document.getElementById("nombre").value;
-    let fechatest = document.getElementById("fecha").value;
+    let nombre = document.getElementById("nombre").value;
     let fechaCompleta = document.getElementById("fecha").value.split("/");
     let anio = fechaCompleta[2];
     let mes = fechaCompleta[1];
@@ -87,8 +86,8 @@ function agregarCitaAlDom(cita){
 const calendario = [{
     "nombre": "Modesto Arreola",
     "anio": 2023,
-    "mes": 1,
-    "dia": 1,
+    "mes": 10,
+    "dia": 20,
     "hora": 10,
     "fecha": "2023-01-01T16:00:00.000Z"
 }]
