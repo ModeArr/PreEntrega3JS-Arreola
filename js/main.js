@@ -9,6 +9,19 @@ $('#datepicker input').datepicker({
     startDate: "Date()"
 })
 
+class Cita {
+    constructor(nombre, anio, mes, dia, hora) {
+        this.nombre = nombre;
+        this.anio = Number(anio);
+        this.mes = Number(mes);
+        this.dia = Number(dia);
+        this.hora = Number(hora);
+        this.fecha= new Date(this.anio, (this.mes - 1), this.dia, this.hora).toJSON(); //se agrega Date() por si se ocupa después
+        this.fechaCreacion = Date();
+
+    }
+}
+
 //Citas que ya fueron registradas
 const calendario = [{
     "nombre": "Modesto Arreola",
@@ -21,21 +34,10 @@ const calendario = [{
 
 const citasAgregadas = document.getElementById("citaAgregada");
 const alerta = document.getElementById("alerta");
-if (localStorage.getItem("cita")){
-    const cita = JSON.parse(localStorage.getItem("cita"));
+const cita = JSON.parse(localStorage.getItem("cita"));
+if (cita) {
     agregarCitaAlDom(cita);
-}
-
-class Cita {
-    constructor(nombre, anio, mes, dia, hora) {
-        this.nombre = nombre;
-        this.anio = Number(anio);
-        this.mes = Number(mes);
-        this.dia = Number(dia);
-        this.hora = Number(hora);
-        this.fecha= new Date(this.anio, (this.mes - 1), this.dia, this.hora).toJSON(); //se agrega Date() por si se ocupa después
-        this.fechaCreacion = Date();
-    }
+    calendario.push(cita);
 }
 
 function validateCalendar(calendario, cita) {
@@ -48,7 +50,6 @@ formaCita.addEventListener("submit", (e) => {
     if (!formaCita.checkValidity()) {
         e.preventDefault()
         e.stopImmediatePropagation()
-    
     }else{
         let nombre = document.getElementById("nombre").value;
         let fechaCompleta = document.getElementById("fecha").value.split("/");
@@ -61,25 +62,27 @@ formaCita.addEventListener("submit", (e) => {
             guardarCita(cita);
             calendario.push(cita);
             agregarCitaAlDom(cita);
+            e.preventDefault()
         } else if(localStorage.getItem("cita")){
             alertaYaTiene();
         }else {
             alertaDuplicado();
         }
+        e.preventDefault()
     }
-    
+
     e.preventDefault()
     formaCita.classList.add('was-validated')
 }, false)
 
-function borrarCita(){
+function borrarCita(calendario){
+    eliminarCitaCalendario(calendario);
     localStorage.removeItem('cita');
     citasAgregadas.innerHTML = ""
-    calendario.pop();
 }
 
 function guardarCita(cita){
-    localStorage.setItem("cita", JSON.stringify(cita))
+    localStorage.setItem("cita", JSON.stringify(cita));
 }
 
 function agregarCitaAlDom(cita){
@@ -90,7 +93,7 @@ function agregarCitaAlDom(cita){
     <div class="card-body">
       <h5 class="card-title">Agregaste una cita ${cita?.nombre}</h5>
       <p class="card-text">Tu cita es para el ${cita?.dia}/${cita?.mes}/${cita?.anio} a las ${cita?.hora}:00 horas</p>
-      <a onclick="borrarCita()" class="btn btn-primary">Cancelar cita</a>
+      <a class="btn btn-primary" id="cancelarCita" onclick="borrarCita(calendario)">Cancelar cita</a>
     </div>
     <div class="card-footer text-body-secondary">
       Recuerda llegar 5 minutos antes a tu cita.
@@ -109,6 +112,14 @@ function alertaYaTiene(){
     alerta.innerHTML = `<div class="alert alert-danger text-center alert-dismissible" role="alert" >
     Ya tienes una cita, puede borrarla y agregar otra si gustas.
 </div>`
+}
+
+//document.getElementById("cancelarCita").addEventListener("click", borrarCita(calendario), false);
+
+function eliminarCitaCalendario(calendario){
+        let citaguardada = JSON.parse(localStorage.getItem("cita"));
+        let idx = calendario.findIndex(obj => obj.fecha==citaguardada.fecha);
+        if(idx>=0) calendario.splice(idx, 1);
 }
 
 
